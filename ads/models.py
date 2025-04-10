@@ -18,7 +18,6 @@ class Ads(models.Model):
     def __str__(self):
         return self.title
 
-
 class ExchangeProposal(models.Model):
 
     STATUS_CHOICES = (
