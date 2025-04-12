@@ -1,3 +1,2 @@
 from .ads_serializer import AdsSerializer
-from .exchange_proposal_view_serializer import ExchangeListSerializer
 
