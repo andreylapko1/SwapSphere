@@ -28,10 +28,8 @@ schema_view = get_schema_view(
    openapi.Info(
       title="SwapSphere API",
       default_version='v1',
-      description="Описание API (можно Markdown)",
-      terms_of_service="https://your.domain/policy/",
-      contact=openapi.Contact(email="support@your.domain"),
-      license=openapi.License(name="BSD License"),
+      description="SwapSphere API для ",
+
    ),
    public=True,
    permission_classes=[permissions.AllowAny],

@@ -16,6 +16,7 @@ class ExchangeProposalCreateView(GenericViewSet, CreateModelMixin):
 
 class ExchangeToUserView(GenericViewSet, ListModelMixin):
     serializer_class = ExchangeListSerializer
+    ordering_fields = ['ad_receiver', 'created_at', 'status']
 
     def get_queryset(self):
         return ExchangeProposal.objects.filter(ad_receiver__user=self.request.user)
