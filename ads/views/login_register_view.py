@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 
-from ads.serializers.login_serializer import LoginSerializer
+from ads.serializers.login_serializer import LoginSerializer, RegisterSerializer
 
 
 class Login(APIView):
@@ -26,36 +26,29 @@ class Login(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
         user = authenticate(
             username=serializer.validated_data['username'],
             password=serializer.validated_data['password']
         )
-
-        if user is not None:
+        if user is not None and user.is_authenticated:
             login(request, user)
-            return Response({'success': 'Вы вошли в систему'}, status=status.HTTP_200_OK)
+            response = redirect('/api')
+            return response
         return Response({'error': 'Неверный логин или пароль'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-
 
 
 class Register(APIView):
     permission_classes = (AllowAny,)
-    def get(self, request):
-        form = UserCreationForm()
-        return render(request, "ads/register.html", {"form": form})
+    serializer_class = RegisterSerializer
 
     def post(self, request):
-        form = UserCreationForm(data=request.POST)
-        if form.is_valid():
-            user = form.save()
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
             login(request, user)
             response = redirect("/api")
             return response
         else:
-            return render(request, "ads/register.html", {"form": form})
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Create your views here.
