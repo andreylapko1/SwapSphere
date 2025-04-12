@@ -1,9 +1,13 @@
+from django.http import Http404
+from pyexpat.errors import messages
+from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, DestroyModelMixin, UpdateModelMixin, \
     RetrieveModelMixin
+from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet, GenericViewSet, ModelViewSet
 from ads.models import Ads
 from ads.permissions import IsOwnerOrReadOnly
@@ -33,4 +37,19 @@ class AdsRetrieveUpdateDestroyView(ModelViewSet):
 
 
     def get_object(self):
-        return Ads.objects.get(pk=self.kwargs['pk'])
+        return get_object_or_404(Ads, pk=self.kwargs['pk'])
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return Response({"message": "Success deleted"}, status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response({
+            "message": "Ad updated successfully",
+            "updated_ad": serializer.data}, status=status.HTTP_200_OK)
+
