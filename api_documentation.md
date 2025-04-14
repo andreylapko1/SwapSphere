@@ -321,6 +321,12 @@
 Если у вас еще нет локальной копии репозитория:
 
 ```bash
+
+Установка докер обараза
+docker push andreylapko1/swapsphere:latest
+
+Или клонирование репозитория
+
 git clone https://github.com/andreylapko1/SwapSphere/
 cd SwapSphere
 
