@@ -18,7 +18,7 @@ from ads.serializers.ads_serializer import AdsCreateSerializer
 class AdsViewSet(ListModelMixin, GenericViewSet):
     filter_backends = (DjangoFilterBackend,OrderingFilter, SearchFilter)
     search_fields = ('title','description')
-    ordering_fields = ['category', 'condition']
+    ordering_fields = ['category', 'condition', 'created_at']
     queryset = Ads.objects.all()
     serializer_class = AdsSerializer
 
